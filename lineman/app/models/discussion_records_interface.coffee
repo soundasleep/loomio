@@ -9,7 +9,4 @@ angular.module('loomioApp').factory 'DiscussionRecordsInterface', (BaseRecordsIn
         per:      options['per']
 
     fetchDashboard: (options = {}) ->
-      @restfulClient.get 'discussions_for_dashboard', options
-
-    fetchInbox: (options = {}) ->
-      @restfulClient.get 'discussions_for_inbox', options
+      @restfulClient.get 'dashboard', options

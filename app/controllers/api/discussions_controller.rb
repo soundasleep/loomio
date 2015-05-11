@@ -2,13 +2,8 @@ class API::DiscussionsController < API::RestfulController
   load_and_authorize_resource only: [:show, :mark_as_read, :set_volume]
   load_resource only: [:create, :update]
 
-  def discussions_for_dashboard
+  def dashboard
     instantiate_collection { |collection| discussions_for_preview(collection) }
-    respond_with_discussions
-  end
-
-  def discussions_for_inbox
-    instantiate_collection(page: false) { |collection| discussions_for_preview(collection, :show_unread) }
     respond_with_discussions
   end
 
@@ -37,15 +32,6 @@ class API::DiscussionsController < API::RestfulController
     render json: DiscussionWrapper.new_collection(user: current_user, discussions: @discussions),
            each_serializer: DiscussionWrapperSerializer,
            root: 'discussion_wrappers'
-  end
-
-  def discussion_params
-    params.require(:discussion).permit([:title,
-                                        :description,
-                                        :uses_markdown,
-                                        :group_id,
-                                        :private,
-                                        :iframe_src])
   end
 
   def visible_records
