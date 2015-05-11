@@ -2,5 +2,5 @@ angular.module('loomioApp').factory 'ProposalRecordsInterface', (BaseRecordsInte
   class ProposalRecordsInterface extends BaseRecordsInterface
     model: ProposalModel
 
-    fetchByDiscussion: (discussion, s, f) ->
-      @restfulClient.getCollection(discussion_key: discussion.key)
+    fetchByDiscussion: (discussion) ->
+      @fetch { discussion_key: discussion.key }, "proposalsFor#{discussion.key}"

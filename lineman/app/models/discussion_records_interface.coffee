@@ -3,13 +3,13 @@ angular.module('loomioApp').factory 'DiscussionRecordsInterface', (BaseRecordsIn
     model: DiscussionModel
 
     fetchByGroup: (options = {}) ->
-      @restfulClient.getCollection
+      @fetch
         group_id: options['group_id']
         from:     options['from']
         per:      options['per']
 
     fetchDashboard: (options = {}) ->
-      @restfulClient.get 'dashboard', options
+      @fetchCustomPath 'dashboard', options, "#{options['filter']}_dashboard"
 
     fetchInbox: ->
       @fetchDashboard
