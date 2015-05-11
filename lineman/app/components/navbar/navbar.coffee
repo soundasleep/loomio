@@ -11,10 +11,5 @@ angular.module('loomioApp').directive 'navbar', ->
       ThreadQueryService.unreadQuery().length()
 
     if !$scope.inboxLoaded
-      Records.discussions.fetchDashboard(
-        filter: 'show_unread'
-        from: 0
-        per: 100
-        since: moment().subtract(3, 'month').toDate()
-        timeframe_for: 'last_activity_at').then ->
+      Records.discussions.fetchInbox().then ->
         $scope.inboxLoaded = true

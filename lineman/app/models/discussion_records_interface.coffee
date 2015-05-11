@@ -10,3 +10,11 @@ angular.module('loomioApp').factory 'DiscussionRecordsInterface', (BaseRecordsIn
 
     fetchDashboard: (options = {}) ->
       @restfulClient.get 'dashboard', options
+
+    fetchInbox: ->
+      @fetchDashboard
+        filter: 'show_unread'
+        from: 0
+        per: 100
+        since: moment().startOf('day').subtract(3, 'month').toDate()
+        timeframe_for: 'last_activity_at'
