@@ -31,15 +31,6 @@ describe API::DiscussionsController do
   end
 
   describe 'dashboard_discussions' do
-    it 'returns discussions with activity after a certain date' do
-      old_discussion.reload
-      get :discussions_for_dashboard
-      json = JSON.parse(response.body)
-      ids = json['discussions'].map { |v| v['id'] }
-      expect(ids).to include discussion.id
-      expect(ids).to_not include old_discussion.id
-    end
-
     it 'does not return muted discussions by default' do
       muted_discussion.reload
       get :discussions_for_dashboard
@@ -75,9 +66,24 @@ describe API::DiscussionsController do
       expect(ids).to include muted_discussion.id
       expect(ids).to_not include discussion.id
     end
-  end
 
-  describe 'inbox_discussions' do
+    it 'can filter since a certain date' do
+      old_discussion.reload
+      get :discussions_for_dashboard, since: 3.months.ago
+      json = JSON.parse(response.body)
+      ids = json['discussions'].map { |v| v['id'] }
+      expect(ids).to include discussion.id
+      expect(ids).to_not include old_discussion.id
+    end
+
+    it 'can filter until a certain date' do
+      old_discussion.reload
+      get :discussions_for_dashboard, until: 3.months.ago
+      json = JSON.parse(response.body)
+      ids = json['discussions'].map { |v| v['id'] }
+      expect(ids).to_not include discussion.id
+      expect(ids).to include old_discussion.id
+    end
   end
 
   describe 'show' do

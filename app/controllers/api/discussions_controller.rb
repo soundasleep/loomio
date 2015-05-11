@@ -3,12 +3,12 @@ class API::DiscussionsController < API::RestfulController
   load_resource only: [:create, :update]
 
   def discussions_for_dashboard
-    @discussions = page_collection discussions_for_preview
+    instantiate_collection { |collection| discussions_for_preview(collection) }
     respond_with_discussions
   end
 
   def discussions_for_inbox
-    @discussions = discussions_for_preview('show_unread')
+    instantiate_collection(page: false) { |collection| discussions_for_preview(collection, :show_unread) }
     respond_with_discussions
   end
 
@@ -54,14 +54,14 @@ class API::DiscussionsController < API::RestfulController
 
   private
 
-  def discussions_for_preview(filter = params[:filter])
+  def discussions_for_preview(collection, filter = params[:filter])
     case filter
-    when 'show_proposals'     then visible_records.not_muted.with_active_motions
-    when 'show_participating' then visible_records.not_muted.participating
-    when 'show_muted'         then visible_records.muted
-    when 'show_unread'        then visible_records.not_muted.unread
-    else                           visible_records.not_muted
-    end.recent
+    when 'show_proposals'     then collection.not_muted.with_active_motions
+    when 'show_participating' then collection.not_muted.participating
+    when 'show_muted'         then collection.muted
+    when 'show_unread'        then collection.not_muted.unread
+    else                           collection.not_muted
+    end
   end
 
   def discussion_reader

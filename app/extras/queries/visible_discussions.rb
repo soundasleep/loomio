@@ -75,11 +75,6 @@ class Queries::VisibleDiscussions < Delegator
     self
   end
 
-  def recent
-    @relation = @relation.where('last_activity_at > ?', 3.months.ago)
-    self
-  end
-
   def sorted_by_latest_motions
     @relation = @relation.joined_to_current_motion
                          .preload(:current_motion, {group: :parent})

@@ -96,13 +96,17 @@ class API::RestfulController < API::BaseController
     self.resource = resource_class.new(resource_params)
   end
 
-  def instantiate_collection
-    records = if resource_class.try(:has_timeframe?)
-      visible_records.within(params[:since], params[:until])
-    else
-      visible_records
-    end
-    self.collection = page_collection(records).to_a
+  def instantiate_collection(timeframe_collection: true, page_collection: true)
+    collection = visible_records
+    collection = yield collection                if block_given?
+    collection = timeframe_collection collection if timeframe_collection
+    collection = page_collection collection      if page_collection
+    self.collection = collection.to_a
+  end
+
+  def timeframe_collection(collection)
+    return collection unless resource_class.try(:has_timeframe?) && (params[:since] || params[:until])
+    collection.within(params[:since], params[:until], params[:timeframe_for])
   end
 
   def page_collection(collection)
