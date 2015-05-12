@@ -46,16 +46,15 @@ angular.module('loomioApp').factory 'BaseRecordsInterface', (RestfulClient, $q) 
     fetchByKey: (key) ->
       @restfulClient.getMember(key)
 
-    # we should make RestfulClient smart enough to just handle this w/out 2 methods
-    fetchCustomPath: (path, params, cacheKey) ->
-      lastFetchedAt = @applyLatestFetch(cacheKey) if cacheKey
-      params['since'] = lastFetchedAt if lastFetchedAt?
-      @restfulClient.get(path, params)
+    fetch: ({params, path, cacheKey}) ->
+      if cacheKey
+        lastFetchedAt = @applyLatestFetch(cacheKey)
+        params.since = lastFetchedAt if params? and lastFetchedAt?
 
-    fetch: (params, cacheKey) ->
-      lastFetchedAt = @applyLatestFetch(cacheKey) if cacheKey
-      params['since'] = lastFetchedAt if lastFetchedAt?
-      @restfulClient.getCollection(params)
+      if path?
+        @restfulClient.get(path, params)
+      else
+        @restfulClient.getCollection(params)
 
     applyLatestFetch: (cacheKey) ->
       lastFetchedAt = @latestCache[cacheKey]

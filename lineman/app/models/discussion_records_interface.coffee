@@ -4,12 +4,19 @@ angular.module('loomioApp').factory 'DiscussionRecordsInterface', (BaseRecordsIn
 
     fetchByGroup: (options = {}) ->
       @fetch
-        group_id: options['group_id']
-        from:     options['from']
-        per:      options['per']
+        params:
+          group_id: options['group_id']
+          from: options['from']
+          per: options['per']
 
     fetchDashboard: (options = {}) ->
-      @fetchCustomPath 'dashboard', options, "#{options['filter']}_dashboard"
+      @fetch
+        path: 'dashboard'
+        params: options
+        cacheKey: dashboardCacheKeyFor(options)
+
+    dashboardCacheKeyFor = (options) ->
+      "#{options['filter']}Dashboard" unless options['filter'] == 'show_all'
 
     fetchInbox: ->
       @fetchDashboard

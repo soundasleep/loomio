@@ -3,4 +3,7 @@ angular.module('loomioApp').factory 'ProposalRecordsInterface', (BaseRecordsInte
     model: ProposalModel
 
     fetchByDiscussion: (discussion) ->
-      @fetch { discussion_key: discussion.key }, "proposalsFor#{discussion.key}"
+      @fetch
+        params:
+          discussion_key: discussion.key
+        cacheKey: "proposalsFor#{discussion.key}"

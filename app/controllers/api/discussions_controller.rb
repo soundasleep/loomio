@@ -3,7 +3,7 @@ class API::DiscussionsController < API::RestfulController
   load_resource only: [:create, :update]
 
   def dashboard
-    instantiate_collection { |collection| discussions_for_preview(collection) }
+    instantiate_collection { |collection| filter_collection collection }
     respond_with_discussions
   end
 
@@ -40,7 +40,7 @@ class API::DiscussionsController < API::RestfulController
 
   private
 
-  def discussions_for_preview(collection, filter = params[:filter])
+  def filter_collection(collection, filter = params[:filter])
     case filter
     when 'show_proposals'     then collection.not_muted.with_active_motions
     when 'show_participating' then collection.not_muted.participating

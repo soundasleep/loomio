@@ -3,4 +3,6 @@ angular.module('loomioApp').factory 'SearchResultRecordsInterface', (BaseRecords
     model: SearchResultModel
 
     fetchByFragment: (fragment) ->
-      @fetch {q: fragment}
+      @fetch
+        params:
+          q: fragment
