@@ -116,7 +116,7 @@ class API::RestfulController < API::BaseController
   end
 
   def parse_date_parameters
-    API_DATE_PARAMETERS.each { |field| params[field] = DateTime.parse(params[field]) if params[field] }
+    API_DATE_PARAMETERS.each { |field| params[field] = DateTime.parse(params[field].to_s) if params[field] }
   end
 
   def page_collection(collection)
